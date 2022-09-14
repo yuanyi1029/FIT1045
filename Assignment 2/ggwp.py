@@ -1,36 +1,31 @@
-from enum import Enum
+#From Applied 7.2
+class Robot:
+    """ Robot class for representing and manipulating robots. """
 
-class Rank(Enum):
-	
-	def __lt__(self, other: Rank) -> bool:
-		# self.Two = 2 
-		# self.Three = 3
-		# self.Four = 4
-		# self.Five = 5
-		# self.Six = 6
-		# self.Seven = 7
-		# self.Eight = 8
-		# self.Nine = 9 
-		# self.Ten = 10
-		# self.Jack = 11
-		# self.Queen = 12
-		# self.King = 13 
-		# self.Ace = 14
+    phrase = "Hello World!" # Class Variable.
 
-		self.Two = "Two"
-		self.Three = "Three"
-		self.Four = "Four"
-		self.Five = "Five"
-		self.Six = "Six"
-		self.Seven = "Seven"
-		self.Eight = "Eight"
-		self.Nine = "Nine"
-		self.Ten = "Ten"
-		self.Jack = "Jack"
-		self.Queen = "Queen"
-		self.King = "King"
-		self.Ace = "Ace"
-		# raise NotImplementedError
+    def __init__(self, name): # Constructor (with parameters).
+        """ Create a new robot. """
+        self.name = name
+        self.phrase = self.phrase
+        self.hand = []
 
+    # Methods
+    def get_name(self):
+        return self.name
 
-card1 = Rank(Two)
+    def get_phrase(self):
+        return self.phrase
+
+    def set_phrase(self, phrase):
+        self.phrase = phrase
+
+    def greet_another_by_name(self, robot):
+        return "Greetings " + robot.get_name() + ", my name is " + self.get_name()  + "."
+
+    def self_replicate(self):
+        return Robot(self.get_name() + " Jr.")
+
+r1 = Robot("test")
+r1.hand = [1,2,3,4,5]
+print(r1.hand)
