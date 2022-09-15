@@ -42,7 +42,6 @@ class Card:
 		return self.rank.value == other.rank.value and self.suit.value == other.suit.value
 
 	def __lt__(self, other: Card) -> bool:
-		# return self.suit.value < other.suit.value or self.rank.value < other.rank.value
 		return (self.suit.value, self.rank.value) < (other.suit.value, other.rank.value) 
 
 

@@ -28,16 +28,16 @@ class BasicAIPlayer:
 		highest_cards = []
 		temporary_list_of_cards = self.hand.copy()
 
-		for i in range (loops):
+		for i in range (3):
 			current_max = max(temporary_list_of_cards)
 			highest_cards.append(current_max)
 			temporary_list_of_cards.remove(current_max)
 		
-		return highest_cards
+		print(highest_cards)
+		# return highest_cards
 
 		# for j in highest_cards:
 		# 	print(j)
-		# print(highest_cards)
 			
 	def check_valid_play(self, card: Card, trick: list[Card], broken_hearts: bool) -> tuple(bool, str):
 
