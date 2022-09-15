@@ -4,15 +4,16 @@ from cards import Card, Rank, Suit
 class BasicAIPlayer:
 
 	def __init__(self, name: str):
+		self.name = name
 		self.hand = []
 		self.round_score = 0 
 		self.total_score = 0
 
-	# def __str__(self) -> str:
-	# 	return self.hand
+	def __str__(self) -> str:
+		return self.name
 
-	# def __repr__(self) -> str:
-	# 	return self.__str__()
+	def __repr__(self) -> str:
+		return self.__str__()
 
 	def play_card(self, trick: list[Card], broken_hearts: bool) -> Card:
 		lowest_card = Card(Rank.Ace, Suit.Hearts)
@@ -24,20 +25,15 @@ class BasicAIPlayer:
 			
 		return lowest_card
 
-	def pass_cards(self) -> Card:
+	def pass_cards(self, hand) -> list[Card]:
 		highest_cards = []
-		temporary_list_of_cards = self.hand.copy()
 
 		for i in range (3):
-			current_max = max(temporary_list_of_cards)
+			current_max = max(hand)
 			highest_cards.append(current_max)
-			temporary_list_of_cards.remove(current_max)
+			hand.remove(current_max)
 		
-		print(highest_cards)
-		# return highest_cards
-
-		# for j in highest_cards:
-		# 	print(j)
+		return highest_cards
 			
 	def check_valid_play(self, card: Card, trick: list[Card], broken_hearts: bool) -> tuple(bool, str):
 
@@ -87,11 +83,12 @@ if __name__ == "__main__":
 	# print(player.play_card(trick, broken_hearts=False))
 
 	# TASK 2.3.1 TEST
-	# player = BasicAIPlayer("Test Player 1")
-	# player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
-	# print(player.pass_cards())
-
 	player = BasicAIPlayer("Test Player 1")
 	player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
-	print(player)
+	print(player.pass_cards(player.hand))
+
+	# player = BasicAIPlayer("Test Player 1")
+	# player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
+	# print(player.hand)
+
 	# pass

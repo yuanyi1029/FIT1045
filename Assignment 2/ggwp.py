@@ -1,31 +1,26 @@
-#From Applied 7.2
-class Robot:
-    """ Robot class for representing and manipulating robots. """
+from __future__ import annotations
+from cards import Card, Rank, Suit
 
-    phrase = "Hello World!" # Class Variable.
+class BasicAIPlayer:
 
-    def __init__(self, name): # Constructor (with parameters).
-        """ Create a new robot. """
-        self.name = name
-        self.phrase = self.phrase
-        self.hand = []
+	def __init__(self, name: str):
+		self.hand = []
+		self.round_score = 0 
+		self.total_score = 0
 
-    # Methods
-    def get_name(self):
-        return self.name
+	def pass_cards(self) -> Card:
+		highest_cards = []
+		temporary_list_of_cards = self.hand.copy()
 
-    def get_phrase(self):
-        return self.phrase
+		for i in range (3):
+			current_max = max(temporary_list_of_cards)
+			highest_cards.append(current_max)
+			temporary_list_of_cards.remove(current_max)
 
-    def set_phrase(self, phrase):
-        self.phrase = phrase
-
-    def greet_another_by_name(self, robot):
-        return "Greetings " + robot.get_name() + ", my name is " + self.get_name()  + "."
-
-    def self_replicate(self):
-        return Robot(self.get_name() + " Jr.")
-
-r1 = Robot("test")
-r1.hand = [1,2,3,4,5]
-print(r1.hand)
+		for j in highest_cards:
+			print(j)
+			
+if __name__ == "__main__":
+	player = BasicAIPlayer("Test Player 1")
+	player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
+	print(player.pass_cards())
