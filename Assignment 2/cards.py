@@ -50,7 +50,8 @@ if __name__ == "__main__":
 	card1 = Card(Rank.Two, Suit.Clubs)
 	card2 = Card(Rank.Ace, Suit.Hearts) 
 	trick = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
-	print(trick)
+	if card1.suit == Suit.Clubs:
+		print(card1.suit)
 
 	# print(card1.suit)
 	# print(f"{card1}, {card2}")
