@@ -46,7 +46,7 @@ class BasicAIPlayer:
 			else:
 				output_tuple = (True, "valid play")
 
-		else:			# not leading			
+		else:																					# not leading			
 			has_required_suit = False
 			for i in self.hand:
 				if trick[0].suit == i.suit:
@@ -75,21 +75,21 @@ if __name__ == "__main__":
 	# print(player.check_valid_play(player.hand[0], trick, broken_hearts))
 
 	# TASK 2.3 TEST 
-	player = BasicAIPlayer("Test Player 1")
-	player.hand.append(Card(Rank.Four, Suit.Clubs))
-	player.hand.append(Card(Rank.Ace, Suit.Hearts))
-	player.hand.append(Card(Rank.King, Suit.Spades))
-	player.hand.append(Card(Rank.Ten, Suit.Spades))
-	trick = [Card(Rank.Seven, Suit.Spades)]
-	print(player.play_card(trick, broken_hearts=False))
+	# player = BasicAIPlayer("Test Player 1")
+	# player.hand.append(Card(Rank.Four, Suit.Clubs))
+	# player.hand.append(Card(Rank.Ace, Suit.Hearts))
+	# player.hand.append(Card(Rank.King, Suit.Spades))
+	# player.hand.append(Card(Rank.Ten, Suit.Spades))
+	# trick = [Card(Rank.Seven, Suit.Spades)]
+	# print(player.play_card(trick, broken_hearts=False))
 
 	# TASK 2.3.1 TEST
 	# player = BasicAIPlayer("Test Player 1")
 	# player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
 	# print(player.pass_cards(player.hand))
 
-	# player = BasicAIPlayer("Test Player 1")
-	# player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
-	# print(player.hand)
+	player = BasicAIPlayer("Test Player 1")
+	player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
+	print(player.hand)
 
 	# pass
