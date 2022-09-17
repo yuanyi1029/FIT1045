@@ -7,6 +7,7 @@ class Round:
 
 	def __init__(self, players: list[Player]) -> None:
 		self.players = players
+		self.broken_hearts = False
 
 	# def __str__(self) -> str:
 	# 	return self.one_round()
@@ -16,24 +17,26 @@ class Round:
 
 
 	def one_round(self):
-		while len(players[0].hand) != 0:
+		while len(self.players[0].hand) != 0:
 			self.one_trick()
-		# self.round_end_stats()
+		self.round_end_stats()
 
 	def one_trick(self):
 		trick = []
+
 		if self.first_trick_check() is True:
 			self.first_turn_players_update(players)
+
 		for eachplayer in players:
-			played_card = eachplayer.play_card(trick, broken_hearts = False)
+			played_card = eachplayer.play_card(trick, self.broken_hearts)
 			print(eachplayer.name + " played " + str(played_card))
+			if played_card.suit == Suit.Hearts and self.broken_hearts == False:
+				self.broken_hearts = True
+				print("Hearts have been broken!")
 			trick.append(played_card)
-		# print(trick)
 		winner = self.winner_check(trick, players)
-		print("winner: " + winner.name)
 		if self.first_trick_check() is False: 
 			self.other_turn_players_update(players, winner)
-
 
 	def first_turn_players_update(self, players: list[Player]) -> list[Player]: 
 
@@ -44,21 +47,15 @@ class Round:
 			for eachcard in players[playerindex].hand:
 				if eachcard == Card(Rank.Two, Suit.Clubs):
 					reduce_by = playerindex
-		# print(reduce_by)
 
 		for playerindex in range(len(players)):
 			players[playerindex-reduce_by] = copied_players[playerindex]
 
-		# print(players)
 		return players
 
 	def other_turn_players_update(self, players: list[Player], winner) -> list[Player]:
 
 		copied_players = players.copy()
-		# print(players[2])
-		# print(winner)
-		# print(players[2] == winner)
-		# print(players)
 
 		for playerindex in range(len(players)):
 			if players[playerindex] == winner:
@@ -66,8 +63,7 @@ class Round:
 
 		for playerindex in range(len(players)):
 			players[playerindex-reduce_by] = copied_players[playerindex]
-		
-		# print(players)
+
 		return players
 
 	def first_trick_check(self) -> bool:
@@ -92,11 +88,6 @@ class Round:
 				winner_index = trickindex
 
 		winner = players[winner_index]
-
-		# print(main_suit)
-		# print(highest_card)
-		# print(winner_index)
-		# print(winner)
 
 		# determine points
 		for eachcard in trick:
@@ -141,10 +132,10 @@ if __name__ == "__main__":
 	# r1.winner_check(test_trick, test_players)
 	# print(r1.first_player_update(players))
 
-	print(r1.one_trick())
-	print(r1.one_trick())
-	print(r1.one_trick())
-	# print(r1.one_round())
+	# print(r1.one_trick())
+	# print(r1.one_trick())
+	# print(r1.one_trick())
+	print(r1.one_round())
 	# print(test_trick)
 	# print(r1.winner_check(test_trick, players))	 
 	
