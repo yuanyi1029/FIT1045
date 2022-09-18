@@ -1,133 +1,83 @@
 from __future__ import annotations
 from cards import Card, Rank, Suit
-from basic_ai import BasicAIPlayer
 
 
 class Round:
 
-	def __init__(self, players: list[Player]) -> None:
-		self.players = players
-		self.broken_hearts = False
+    def __init__(self, players: list[Player]) -> None:
+        self.players = players
 
-	def one_round(self):
-		while len(self.players[0].hand) != 0:
-			self.one_trick()
-		self.round_end_stats()
+        for player in self.players:  # find who has Two of Clubs
+            player.hand.sort()
+            if player.hand[0] == Card(Rank.Two, Suit.Clubs):
+                leader = player  # assign leader to player who has Two of Clubs
+                break
 
-	def one_trick(self):
-		trick = []
+        broken_hearts = False
+        # round_score = [0, 0, 0, 0]
 
-		if self.first_trick_check() is True:
-			self.first_turn_players_update(players)
+        while len(self.players[0].hand) != 0 and len(self.players[0].hand) != 0 and len(
+                self.players[0].hand) != 0 and len(self.players[0].hand) != 0:
 
-		for eachplayer in players:
-			played_card = eachplayer.play_card(trick, self.broken_hearts)
-			print(eachplayer.name + " played " + str(played_card))
-			if played_card.suit == Suit.Hearts and self.broken_hearts == False:
-				self.broken_hearts = True
-				print("Hearts have been broken!")
-			trick.append(played_card)
-		winner = self.winner_check(trick, players)
-		if self.first_trick_check() is False: 
-			self.other_turn_players_update(players, winner)
+            turn_order = []
+            # finding order of player turn in round
+            for i in range(self.players.index(leader), len(self.players)):
+                # start from leader append next player till end
+                turn_order.append(self.players[i])
 
-	def first_trick_check(self) -> bool:
-		first_trick_status = False
-		for eachplayer in self.players:
-			for eachcard in eachplayer.hand:
-				if eachcard == Card(Rank.Two, Suit.Clubs):
-					first_trick_status = True
-		return first_trick_status
+            while len(turn_order) != 4:  # append remaining player if it did not append all players in first loop
+                for i in range(self.players.index(leader)):  # start from zero (inclusive) to leader (non-inclusive)
+                    turn_order.append(self.players[i])
 
-	def first_turn_players_update(self, players: list[Player]) -> list[Player]: 
+            # print(players)
+            # print(turn_order)
 
-		# print(players)
-		copied_players = players.copy()
+            trick = []
+            # broken_hearts = False
 
-		for playerindex in range(len(players)):	
-			for eachcard in players[playerindex].hand:
-				if eachcard == Card(Rank.Two, Suit.Clubs):
-					reduce_by = playerindex
+            for player in turn_order:
+                played_card = player.play_card(trick, broken_hearts)
+                print(f"{player} plays {played_card}")
+                # print(f"{player} plays {trick.played_cards[player]}")
+                trick.append(played_card)
+                player.hand.pop(player.hand.index(played_card))
 
-		for playerindex in range(len(players)):
-			players[playerindex-reduce_by] = copied_players[playerindex]
+                if not broken_hearts:
+                    for i in range(len(trick)):
+                        if trick[0].suit.value == 4 or (
+                                trick[0].suit.value != trick[i].suit.value and trick[i].suit.value == 4):
+                            broken_hearts = True
+                            print("Hearts have been broken!")
 
-		return players
+            taker_played_card = trick[0]
+            for i in trick:  # finding taker by comparing suit first then rank
+                if i.suit.value == taker_played_card.suit.value and i.rank.value > taker_played_card.rank.value:
+                    taker_played_card = i
 
-	def other_turn_players_update(self, players: list[Player], winner) -> list[Player]:
+            taker = turn_order[trick.index(taker_played_card)]  # finding taker by taking the index of taker played card
+            # print(taker)
 
-		copied_players = players.copy()
+            penalty = 0
+            for i in trick:
+                if i.suit.value == 4:
+                    penalty += 1
+                elif i == Card(Rank.Queen, Suit.Spades):
+                    penalty += 13
 
-		for playerindex in range(len(players)):
-			if players[playerindex] == winner:
-				reduce_by = playerindex
+            # print(penalty)
 
-		for playerindex in range(len(players)):
-			players[playerindex-reduce_by] = copied_players[playerindex]
+            print(f"{taker} takes the trick. Points received: {penalty} points")
 
-		return players
+            # round_score = [0, 0, 0, 0]
+            self.players[self.players.index(taker)].round_score += penalty
 
-	def winner_check(self, trick: list[Card], players):
-		points = 0 
-		winner_index = 0
-		winner = None
-		main_suit = trick[0].suit
-		highest_card = trick[0]
+            # print(round_score)
+            leader = taker
 
-		# determine winner
-		for trickindex in range(len(trick)):
-			if trick[trickindex].suit == main_suit and trick[trickindex] > highest_card:
-				highest_card = trick[trickindex]
-				winner_index = trickindex
+        # total_score = [0, 0, 0, 0]
+        # player_index = 0
 
-		winner = players[winner_index]
-
-		# determine points
-		for eachcard in trick:
-			if eachcard.suit == Suit.Hearts:
-				points += 1
-			elif eachcard == Card(Rank.Queen, Suit.Spades):
-				points += 13
-		
-		# winner status
-		winner.round_score += points
-		print(winner.name + " has taken the trick. Points received: " + str(points))
-		return winner 
-
-	def round_end_stats(self):
-		for player in self.players:
-			print(f"{player}'s score: {player.round_score}")
-			player.total_score += player.round_score
-			player.round_score = 0
-
-if __name__ == "__main__":
-
-	players = [BasicAIPlayer("Player 1"), BasicAIPlayer("Player 2"), BasicAIPlayer("Player 3"), BasicAIPlayer("Player 4")]
-	players[0].hand = [Card(Rank.Four, Suit.Diamonds), Card(Rank.King, Suit.Clubs), Card(Rank.Nine, Suit.Clubs), Card(Rank.Ace, Suit.Hearts)]
-	players[1].hand = [Card(Rank.Two, Suit.Clubs), Card(Rank.Four, Suit.Spades), Card(Rank.Nine, Suit.Spades), Card(Rank.Six, Suit.Diamonds)]
-	players[2].hand = [Card(Rank.Seven, Suit.Diamonds), Card(Rank.Ace, Suit.Spades), Card(Rank.Jack, Suit.Diamonds), Card(Rank.Queen, Suit.Spades)]
-	players[3].hand = [Card(Rank.Queen, Suit.Hearts), Card(Rank.Jack, Suit.Clubs), Card(Rank.Queen, Suit.Diamonds), Card(Rank.King, Suit.Hearts)]
-
-	Round(players)
-	r1 = Round(players)
-	print(r1.one_round())
-	
-	# r1.first_turn_players_update(players)
-	# r1.other_turn_players_update(players, players[2])
-
-	# print(r1.first_trick_check())
-	# print(r1.one_trick())
-
-	# test_players = [BasicAIPlayer("Player 3"), BasicAIPlayer("Player 0"), BasicAIPlayer("Player 1"), BasicAIPlayer("Player 2")]
-	# test_trick = [Card(Rank.Queen, Suit.Diamonds),Card(Rank.Jack, Suit.Diamonds), Card(Rank.Four, Suit.Diamonds),Card(Rank.Six, Suit.Diamonds)]
-	# test_trick2 = [Card(Rank.Two, Suit.Clubs), Card(Rank.Seven, Suit.Diamonds),Card(Rank.Jack, Suit.Clubs),Card(Rank.Nine, Suit.Clubs)]
-	# r1.winner_check(test_trick, test_players)
-	# print(r1.first_player_update(players))
-
-	# print(r1.one_trick())
-	# print(r1.one_trick())
-	# print(r1.one_trick())
-	# print(test_trick)
-	# print(r1.winner_check(test_trick, players))	 
-	
-	
+        # for player in self.players:
+        #     print(f"{player}'s score: {player.round_score}")
+        #     player.total_score += player.round_score
+        #     player.round_score = 0

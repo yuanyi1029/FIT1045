@@ -22,6 +22,8 @@ class Hearts:
 		self.dealcards(number_of_players, self.players)
 		self.playerhandcheck(number_of_players, self.players)
 
+		Round()
+
 		# r1 = Round(self.players)
 		# print(r1.one_round())
 		# pass cards to players 
@@ -47,6 +49,8 @@ class Hearts:
 		# remove and deal cards for 3 players or 5 players 
 		if number_of_players == 3:
 			shuffled_deck.remove(Card(Rank.Two, Suit.Diamonds))
+
+			
 			for i in range(len(shuffled_deck)):
 				if i % 3 == 0: 
 					players[0].hand.append(shuffled_deck[i])

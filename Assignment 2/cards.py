@@ -1,66 +1,61 @@
-
-from __future__ import annotations # for type hints of a class in itself
+from __future__ import annotations  # for type hints of a class in itself
 from enum import Enum
 
-class Rank(Enum):
-	Two = 2 
-	Three = 3
-	Four = 4
-	Five = 5
-	Six = 6
-	Seven = 7
-	Eight = 8
-	Nine = 9 
-	Ten = 10
-	Jack = 11
-	Queen = 12
-	King = 13 
-	Ace = 14
 
-	def __lt__(self, other: Rank) -> bool:
-		return self.value < other.value 
+class Rank(Enum):
+    Two = 2
+    Three = 3
+    Four = 4
+    Five = 5
+    Six = 6
+    Seven = 7
+    Eight = 8
+    Nine = 9
+    Ten = 10
+    Jack = 11
+    Queen = 12
+    King = 13
+    Ace = 14
+
+    def __lt__(self, other: Rank) -> bool:
+        return self.value < other.value
+
 
 class Suit(Enum):
-	Clubs = 1
-	Diamonds = 2
-	Spades = 3
-	Hearts = 4
-	def __lt__(self, other: Suit) -> bool:
-		return self.value < other.value
+    Clubs = 1
+    Diamonds = 2
+    Spades = 3
+    Hearts = 4
+
+    def __lt__(self, other: Suit) -> bool:
+        return self.value < other.value
+
 
 class Card:
-	def __init__(self, rank: Rank, suit: Suit) -> None:
-		self.rank = rank
-		self.suit = suit
 
-	def __repr__(self) -> str:
-		return self.__str__()
+    def __init__(self, rank: Rank, suit: Suit) -> None:
+        self.rank = rank
+        self.suit = suit
 
-	def __str__(self) -> str:
-		return f"{self.rank.name} of {self.suit.name}"
+    def __repr__(self) -> str:
+        return self.__str__()
 
-	def __eq__(self, other: Card) -> bool:
-		return self.rank.value == other.rank.value and self.suit.value == other.suit.value
+    def __str__(self) -> str:
+        return f'{self.rank.name} of {self.suit.name}'
 
-	def __lt__(self, other: Card) -> bool:
-		return (self.suit.value, self.rank.value) < (other.suit.value, other.rank.value) 
+    def __eq__(self, other: Card) -> bool:
+        return (self.suit, self.rank) == (other.suit, other.rank)
+
+    def __lt__(self, other: Card) -> bool:
+        return (self.suit, self.rank) < (other.suit, other.rank)
 
 
 if __name__ == "__main__":
-	card1 = Card(Rank.Two, Suit.Clubs)
-	card2 = Card(Rank.Ace, Suit.Hearts) 
-	trick = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
-	if card1.suit == Suit.Clubs:
-		print(card1.suit)
-
-	# print(card1.suit)
-	# print(f"{card1}, {card2}")
-	# print(card2 < card1)
-	# print(card1 < card2)
-
-	# card1 = Card(Rank.Ace, Suit.Clubs)
-	# card2 = Card(Rank.Two, Suit.Hearts)
-	# print(f"{card1}, {card2}")
-	# print(card2 < card1)
-	# print(card1 < card2)
-	pass
+    # you can make some local tests here.
+    card1 = Card(Rank.Two, Suit.Spades)
+    card2 = Card(Rank.Ace, Suit.Hearts)
+    print(card1 < card2 )
+    #
+    # print(f"{card1}, {card2}")
+    # print(card1 > card2)
+    # pass

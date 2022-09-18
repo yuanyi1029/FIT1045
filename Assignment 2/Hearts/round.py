@@ -8,7 +8,9 @@ class Round:
 	def __init__(self, players: list[Player]) -> None:
 		self.players = players
 		self.broken_hearts = False
-		
+
+		self.one_round()
+
 	def one_round(self):
 		while len(self.players[0].hand) != 0:
 			self.one_trick()
@@ -30,6 +32,14 @@ class Round:
 		winner = self.winner_check(trick, players)
 		if self.first_trick_check() is False: 
 			self.other_turn_players_update(players, winner)
+
+	def first_trick_check(self) -> bool:
+		first_trick_status = False
+		for eachplayer in self.players:
+			for eachcard in eachplayer.hand:
+				if eachcard == Card(Rank.Two, Suit.Clubs):
+					first_trick_status = True
+		return first_trick_status
 
 	def first_turn_players_update(self, players: list[Player]) -> list[Player]: 
 
@@ -59,14 +69,6 @@ class Round:
 
 		return players
 
-	def first_trick_check(self) -> bool:
-		first_trick_status = False
-		for eachplayer in self.players:
-			for eachcard in eachplayer.hand:
-				if eachcard == Card(Rank.Two, Suit.Clubs):
-					first_trick_status = True
-		return first_trick_status
-
 	def winner_check(self, trick: list[Card], players):
 		points = 0 
 		winner_index = 0
@@ -91,7 +93,7 @@ class Round:
 		
 		# winner status
 		winner.round_score += points
-		print(winner.name + " has taken the trick. Points received: " + str(points))
+		print(winner.name + " takes the trick. Points received: " + str(points))
 		return winner 
 
 	def round_end_stats(self):
@@ -100,36 +102,17 @@ class Round:
 			player.total_score += player.round_score
 			player.round_score = 0
 
-
-	def playerhandcheck(self, number_of_players: int, players: list[Player]) -> bool:
-		
-		all_valid = True 
-
-		for eachplayer in players:
-			player_valid = False 	
-			for eachcard in eachplayer.hand:
-				if eachcard.suit == Suit.Clubs or eachcard.suit == Suit.Diamonds or (eachcard.suit == Suit.Spades and eachcard != Card(Rank.Queen, Suit.Spades)):
-					player_valid = True 
-
-			if player_valid == False:
-				all_valid = False
-
-		if all_valid == False:
-			for i in players:
-				i.hand = []
-				
-			
-
 if __name__ == "__main__":
 
 	players = [BasicAIPlayer("Player 1"), BasicAIPlayer("Player 2"), BasicAIPlayer("Player 3"), BasicAIPlayer("Player 4")]
-	players[0].hand = [Card(Rank.Two, Suit.Clubs), Card(Rank.Four, Suit.Spades), Card(Rank.Nine, Suit.Spades), Card(Rank.Six, Suit.Diamonds)]
-	players[1].hand = [Card(Rank.Seven, Suit.Diamonds), Card(Rank.Ace, Suit.Spades), Card(Rank.Jack, Suit.Diamonds), Card(Rank.Queen, Suit.Spades)]
-	players[2].hand = [Card(Rank.Queen, Suit.Spades), Card(Rank.King, Suit.Hearts), Card(Rank.Nine, Suit.Hearts), Card(Rank.Ace, Suit.Hearts)]
+	players[0].hand = [Card(Rank.Four, Suit.Diamonds), Card(Rank.King, Suit.Clubs), Card(Rank.Nine, Suit.Clubs), Card(Rank.Ace, Suit.Hearts)]
+	players[1].hand = [Card(Rank.Two, Suit.Clubs), Card(Rank.Four, Suit.Spades), Card(Rank.Nine, Suit.Spades), Card(Rank.Six, Suit.Diamonds)]
+	players[2].hand = [Card(Rank.Seven, Suit.Diamonds), Card(Rank.Ace, Suit.Spades), Card(Rank.Jack, Suit.Diamonds), Card(Rank.Queen, Suit.Spades)]
 	players[3].hand = [Card(Rank.Queen, Suit.Hearts), Card(Rank.Jack, Suit.Clubs), Card(Rank.Queen, Suit.Diamonds), Card(Rank.King, Suit.Hearts)]
 
 	Round(players)
-	r1 = Round(players)
+	# r1 = Round(players)
+	# print(r1.one_round())
 	
 	# r1.first_turn_players_update(players)
 	# r1.other_turn_players_update(players, players[2])
@@ -146,10 +129,7 @@ if __name__ == "__main__":
 	# print(r1.one_trick())
 	# print(r1.one_trick())
 	# print(r1.one_trick())
-	# print(r1.one_round())
 	# print(test_trick)
 	# print(r1.winner_check(test_trick, players))	 
-
-	print(r1.playerhandcheck(4, players))
 	
 	
