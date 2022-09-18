@@ -1,88 +1,64 @@
 from __future__ import annotations
+from player import Player
 from cards import Card, Rank, Suit
 
+class BasicAIPlayer(Player):
 
-class BasicAIPlayer:
+	def __init__(self, name: str):
+		super().__init__(name)
 
-    def __init__(self, name: str):
-        self.name = name
-        self.hand = []
-        self.round_score = 0
-        self.total_score = 0
+	def __str__(self) -> str:
+		return self.name
 
-    def __str__(self) -> str:
-        return self.name
+	def __repr__(self) -> str:
+		return self.__str__()
 
-    def __repr__(self) -> str:
-        return self.__str__()
+	def play_card(self, trick: list[Card], broken_hearts: bool) -> Card:
+		# lowest_card = Card(Rank.Ace, Suit.Hearts)
 
-    def play_card(self, trick: list[Card], broken_hearts: list[Card]) -> Card:
-        lowest_card = Card(Rank.Ace, Suit.Hearts)
-        for i in self.hand:
-            if self.check_valid_play(i, trick, broken_hearts)[0] == True:
-                if i < lowest_card: 
-                    lowest_card = i 
+		self.hand.sort()
+		for i in self.hand:
+			if self.check_valid_play(i, trick, broken_hearts)[0] == True:
+				self.hand.remove(i)
+				return i
 
-        self.hand.remove(lowest_card)
-        return lowest_card
+	def pass_cards(self) -> list[Card]:
+		highest_cards = []
 
-    def pass_cards(self) -> Card:
-        pass_cards_list = []
-
-        self.hand.sort()  # sort hand
-        self.hand.reverse()  # reverse hand for easier append and pop
-
-        for i in range(3):  # repeat for 3 times
-            pass_cards_list.append(self.hand[0])  # append largest card
-            self.hand.pop(0)  # pop largest card
-
-        pass_cards_list.sort()  # match with sample output
-
-        return pass_cards_list
-
-    def check_valid_play(self, card: Card, trick: list[Card], broken_hearts: bool) -> tuple(bool, str):
-        lead = False
-
-        if len(trick) == 0:
-            lead = True
-
-        if lead:
-            if Card(Rank.Two, Suit.Clubs) in self.hand and card != Card(Rank.Two, Suit.Clubs):
-                # if player has Two of Clubs and do not play it
-                return False, 'Player has Two of Clubs and do not play it'
-            elif card.suit.value == 4 and not broken_hearts:  # if player plays Hearts and broken_hearts is False
-                return False, 'Player plays Hearts and broken_hearts is False'
-            else:
-                return True
-
-        elif not lead:
-            any_card = True
-            for i in self.hand:
-                if i.suit.value == trick[0].suit.value:  # if hand has card any card suit that is same as trick suit
-                    any_card = False
-
-            if not any_card:
-                if card.suit.value != trick[0].suit.value:  # if player does not play following suit
-                    return False, 'Player still has cards from the suit of the current trick'
-                else:
-                    return True
-
-            elif any_card:
-                if len(trick) == 1:
-                    if card.suit.value == 4 or card == Card(Rank.Queen, Suit.Spades):
-                        # unless this is the first trick of the round, they cannot play Hearts or the Queen of Spades.
-                        return False, 'Player cannot play Hearts or Queen of Spades if it is the first trick'
-                    else:
-                        return True
-                else:
-                    return True
-
+		for i in range (3):
+			current_max = max(self.hand)
+			highest_cards.append(current_max)
+			self.hand.remove(current_max)
+		
+		return highest_cards
+			
 
 if __name__ == "__main__":
-    # Test your function here
-    player = BasicAIPlayer("Test Player 1")
-    player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades),
-                   Card(Rank.Ten, Suit.Spades)]
+	# Test your function here
+	# TASK 2.2 TEST 
+	# player = BasicAIPlayer("Test Player 1")
+	# player.hand = [Card(Rank.Two, Suit.Hearts), Card(Rank.Ace, Suit.Spades), Card(Rank.King, Suit.Hearts), Card(Rank.Ten, Suit.Hearts)]
+	# trick, broken_hearts = [], False
+	# print(player.hand[0])
+	# print(player.check_valid_play(player.hand[0], trick, broken_hearts))
 
-    print(player.pass_cards())
-    pass
+	# TASK 2.3 TEST 
+	player = BasicAIPlayer("Test Player 1")
+	player.hand.append(Card(Rank.Two, Suit.Clubs))
+	player.hand.append(Card(Rank.Ace, Suit.Hearts))
+	player.hand.append(Card(Rank.King, Suit.Spades))
+	player.hand.append(Card(Rank.Ten, Suit.Spades))
+	player.hand = [Card(Rank.Queen, Suit.Clubs),Card(Rank.Three, Suit.Hearts), Card(Rank.Eight, Suit.Hearts), Card(Rank.Nine, Suit.Clubs), Card(Rank.Jack, Suit.Spades), Card(Rank.Two, Suit.Diamonds), Card(Rank.Two, Suit.Spades)]
+	trick = [Card(Rank.Three, Suit.Diamonds)]
+	print(player.play_card(trick, broken_hearts=False))
+
+	# TASK 2.3.1 TEST
+	# player = BasicAIPlayer("Test Player 1")
+	# player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
+	# print(player.pass_cards(player.hand))
+
+	# player = BasicAIPlayer("Test Player 1")
+	# player.hand = [Card(Rank.Four, Suit.Clubs), Card(Rank.Ace, Suit.Hearts), Card(Rank.King, Suit.Spades), Card(Rank.Ten, Suit.Spades),]
+	# print(player.hand)
+
+	# pass

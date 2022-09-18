@@ -11,27 +11,29 @@ class Round:
 
 		self.one_round()
 
+
 	def one_round(self):
 		while len(self.players[0].hand) != 0:
 			self.one_trick()
+		# print(f"========= End of round {round} =========")
 		self.round_end_stats()
 
 	def one_trick(self):
 		trick = []
 
 		if self.first_trick_check() is True:
-			self.first_turn_players_update(players)
+			self.first_turn_players_update(self.players)
 
-		for eachplayer in players:
+		for eachplayer in self.players:
 			played_card = eachplayer.play_card(trick, self.broken_hearts)
 			print(eachplayer.name + " played " + str(played_card))
 			if played_card.suit == Suit.Hearts and self.broken_hearts == False:
 				self.broken_hearts = True
 				print("Hearts have been broken!")
 			trick.append(played_card)
-		winner = self.winner_check(trick, players)
+		winner = self.winner_check(trick, self.players)
 		if self.first_trick_check() is False: 
-			self.other_turn_players_update(players, winner)
+			self.other_turn_players_update(self.players, winner)
 
 	def first_trick_check(self) -> bool:
 		first_trick_status = False
