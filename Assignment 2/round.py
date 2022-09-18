@@ -9,13 +9,6 @@ class Round:
 		self.players = players
 		self.broken_hearts = False
 
-	def __str__(self) -> str:
-		return self.one_round()
-
-	def __repr__(self) -> str:
-		return self.__str__()
-
-
 	def one_round(self):
 		while len(self.players[0].hand) != 0:
 			self.one_trick()
@@ -117,6 +110,7 @@ if __name__ == "__main__":
 
 	Round(players)
 	r1 = Round(players)
+	print(r1.one_round())
 	
 	# r1.first_turn_players_update(players)
 	# r1.other_turn_players_update(players, players[2])
@@ -133,7 +127,6 @@ if __name__ == "__main__":
 	# print(r1.one_trick())
 	# print(r1.one_trick())
 	# print(r1.one_trick())
-	print(r1.one_round())
 	# print(test_trick)
 	# print(r1.winner_check(test_trick, players))	 
 	

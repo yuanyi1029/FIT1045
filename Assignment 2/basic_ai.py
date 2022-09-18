@@ -32,7 +32,7 @@ class BasicAIPlayer:
 		for i in range (3):
 			current_max = max(hand)
 			highest_cards.append(current_max)
-			hand.remove(current_max)
+			self.hand.remove(current_max)
 		
 		return highest_cards
 			
