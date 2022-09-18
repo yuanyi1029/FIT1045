@@ -22,7 +22,7 @@ class Hearts:
 		self.dealcards(number_of_players, self.players)
 		self.playerhandcheck(number_of_players, self.players)
 
-		Round()
+		Round(self.players)
 
 		# r1 = Round(self.players)
 		# print(r1.one_round())

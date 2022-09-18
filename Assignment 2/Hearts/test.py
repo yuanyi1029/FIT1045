@@ -9,96 +9,100 @@ class Round:
 		self.players = players
 		self.broken_hearts = False
 
-		# def one_round(self):
-		# 	while len(self.players[0].hand) != 0:
-		# 		one_trick(self)
-		# 	round_end_stats()
+		self.one_round()
 
-		def one_trick(self):
-			trick = []
-			if first_trick_check(self) is True:
-				first_turn_players_update(self, players)
 
-			for eachplayer in players:
-				played_card = eachplayer.play_card(trick, self.broken_hearts)
-				print(eachplayer.name + " played " + str(played_card))
-				if played_card.suit == Suit.Hearts and self.broken_hearts == False:
-					self.broken_hearts = True
-					print("Hearts have been broken!")
-				trick.append(played_card)
-			winner = winner_check(trick, players)
-			if first_trick_check() is False: 
-				other_turn_players_update(players, winner)
+	def one_round(self):
+		while len(self.players[0].hand) != 0:
+			self.one_trick()
+		# print(f"========= End of round {round} =========")
+		self.round_end_stats()
 
-		def first_trick_check(self) -> bool:
-			first_trick_status = False
-			for eachplayer in self.players:
-				for eachcard in eachplayer.hand:
-					if eachcard == Card(Rank.Two, Suit.Clubs):
-						first_trick_status = True
-			return first_trick_status
+	def one_trick(self):
+		trick = []
 
-		def first_turn_players_update(self, players: list[Player]) -> list[Player]: 
-			copied_players = players.copy()
+		if self.first_trick_check() is True:
+			self.first_turn_players_update(self.players)
 
-			for playerindex in range(len(players)):	
-				for eachcard in players[playerindex].hand:
-					if eachcard == Card(Rank.Two, Suit.Clubs):
-						reduce_by = playerindex
+		for eachplayer in self.players:
+			played_card = eachplayer.play_card(trick, self.broken_hearts)
+			print(eachplayer.name + " played " + str(played_card))
+			if played_card.suit == Suit.Hearts and self.broken_hearts == False:
+				self.broken_hearts = True
+				print("Hearts have been broken!")
+			trick.append(played_card)
+		winner = self.winner_check(trick, self.players)
+		if self.first_trick_check() is False: 
+			self.other_turn_players_update(self.players, winner)
 
-			for playerindex in range(len(players)):
-				players[playerindex-reduce_by] = copied_players[playerindex]
+	def first_trick_check(self) -> bool:
+		first_trick_status = False
+		for eachplayer in self.players:
+			for eachcard in eachplayer.hand:
+				if eachcard == Card(Rank.Two, Suit.Clubs):
+					first_trick_status = True
+		return first_trick_status
 
-			return players
+	def first_turn_players_update(self, players: list[Player]) -> list[Player]: 
 
-		def other_turn_players_update(self, players: list[Player], winner) -> list[Player]:
+		# print(players)
+		copied_players = players.copy()
 
-			copied_players = players.copy()
-
-			for playerindex in range(len(players)):
-				if players[playerindex] == winner:
+		for playerindex in range(len(players)):	
+			for eachcard in players[playerindex].hand:
+				if eachcard == Card(Rank.Two, Suit.Clubs):
 					reduce_by = playerindex
 
-			for playerindex in range(len(players)):
-				players[playerindex-reduce_by] = copied_players[playerindex]
+		for playerindex in range(len(players)):
+			players[playerindex-reduce_by] = copied_players[playerindex]
 
-			return players
+		return players
 
-		def winner_check(self, trick: list[Card], players):
-			points = 0 
-			winner_index = 0
-			winner = None
-			main_suit = trick[0].suit
-			highest_card = trick[0]
+	def other_turn_players_update(self, players: list[Player], winner) -> list[Player]:
 
-			# determine winner
-			for trickindex in range(len(trick)):
-				if trick[trickindex].suit == main_suit and trick[trickindex] > highest_card:
-					highest_card = trick[trickindex]
-					winner_index = trickindex
+		copied_players = players.copy()
 
-			winner = players[winner_index]
+		for playerindex in range(len(players)):
+			if players[playerindex] == winner:
+				reduce_by = playerindex
 
-			# determine points
-			for eachcard in trick:
-				if eachcard.suit == Suit.Hearts:
-					points += 1
-				elif eachcard == Card(Rank.Queen, Suit.Spades):
-					points += 13
-			
-			# winner status
-			winner.round_score += points
-			print(winner.name + " has taken the trick. Points received: " + str(points))
-			return winner 
+		for playerindex in range(len(players)):
+			players[playerindex-reduce_by] = copied_players[playerindex]
 
-		def round_end_stats(self):
-			for player in self.players:
-				print(f"{player}'s score: {player.round_score}")
-				player.total_score += player.round_score
-				player.round_score = 0
+		return players
 
-		one_trick(self)
-		# one_round(self)
+	def winner_check(self, trick: list[Card], players):
+		points = 0 
+		winner_index = 0
+		winner = None
+		main_suit = trick[0].suit
+		highest_card = trick[0]
+
+		# determine winner
+		for trickindex in range(len(trick)):
+			if trick[trickindex].suit == main_suit and trick[trickindex] > highest_card:
+				highest_card = trick[trickindex]
+				winner_index = trickindex
+
+		winner = players[winner_index]
+
+		# determine points
+		for eachcard in trick:
+			if eachcard.suit == Suit.Hearts:
+				points += 1
+			elif eachcard == Card(Rank.Queen, Suit.Spades):
+				points += 13
+		
+		# winner status
+		winner.round_score += points
+		print(winner.name + " takes the trick. Points received: " + str(points))
+		return winner 
+
+	def round_end_stats(self):
+		for player in self.players:
+			print(f"{player}'s score: {player.round_score}")
+			player.total_score += player.round_score
+			player.round_score = 0
 
 if __name__ == "__main__":
 
@@ -129,6 +133,5 @@ if __name__ == "__main__":
 	# print(r1.one_trick())
 	# print(test_trick)
 	# print(r1.winner_check(test_trick, players))	 
-	
 	
 	
