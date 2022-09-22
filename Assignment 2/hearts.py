@@ -35,6 +35,52 @@ def int_input(prompt="", restricted_to=None):
     return int_player_input
 
 
+def card_interface(card_list):
+    suit_art = {
+        1: "│  ♣  │",
+        2: "│  ♦  │",
+        3: "│  ♠  │",
+        4: "│  ♥  │"
+    }
+
+    rank_art = {
+        2: ["┌─────┐", "│2    │", "       ", "│    2│", "└─────┘"],
+        3: ["┌─────┐", "│3    │", "       ", "│    3│", "└─────┘"],
+        4: ["┌─────┐", "│4    │", "       ", "│    4│", "└─────┘"],
+        5: ["┌─────┐", "│5    │", "       ", "│    5│", "└─────┘"],
+        6: ["┌─────┐", "│6    │", "       ", "│    6│", "└─────┘"],
+        7: ["┌─────┐", "│7    │", "       ", "│    7│", "└─────┘"],
+        8: ["┌─────┐", "│8    │", "       ", "│    8│", "└─────┘"],
+        9: ["┌─────┐", "│9    │", "       ", "│    9│", "└─────┘"],
+        10: ["┌─────┐", "│10   │", "       ", "│   10│", "└─────┘"],
+        11: ["┌─────┐", "│J    │", "       ", "│    J│", "└─────┘"],
+        12: ["┌─────┐", "│Q    │", "       ", "│    Q│", "└─────┘"],
+        13: ["┌─────┐", "│K    │", "       ", "│    K│", "└─────┘"],
+        14: ["┌─────┐", "│A    │", "       ", "│    A│", "└─────┘"]
+    }
+
+    display_card = ""
+    for row in range(len(rank_art[2])):
+
+        if row != 2:
+            for element in card_list:
+                display_card += rank_art[element.rank.value][row]
+
+        else:
+            for element in card_list:
+                display_card += suit_art[element.suit.value]
+
+        display_card += "\n"
+
+    for index in range(len(card_list)):
+        if index < 10:
+            display_card += f"   {index}   "
+        else:
+            display_card += f"  {index}   "
+
+    return display_card
+
+
 class Hearts:
 
     def __init__(self) -> None:
@@ -81,24 +127,11 @@ class Hearts:
         return players
 
     def deck(self):
-        deck = [Card(Rank.Two, Suit.Clubs), Card(Rank.Three, Suit.Clubs), Card(Rank.Four, Suit.Clubs),
-                Card(Rank.Five, Suit.Clubs), Card(Rank.Six, Suit.Clubs), Card(Rank.Seven, Suit.Clubs),
-                Card(Rank.Eight, Suit.Clubs), Card(Rank.Nine, Suit.Clubs), Card(Rank.Ten, Suit.Clubs),
-                Card(Rank.Jack, Suit.Clubs), Card(Rank.Queen, Suit.Clubs), Card(Rank.King, Suit.Clubs),
-                Card(Rank.Ace, Suit.Clubs), Card(Rank.Two, Suit.Diamonds), Card(Rank.Three, Suit.Diamonds),
-                Card(Rank.Four, Suit.Diamonds), Card(Rank.Five, Suit.Diamonds), Card(Rank.Six, Suit.Diamonds),
-                Card(Rank.Seven, Suit.Diamonds), Card(Rank.Eight, Suit.Diamonds), Card(Rank.Nine, Suit.Diamonds),
-                Card(Rank.Ten, Suit.Diamonds), Card(Rank.Jack, Suit.Diamonds), Card(Rank.Queen, Suit.Diamonds),
-                Card(Rank.King, Suit.Diamonds), Card(Rank.Ace, Suit.Diamonds), Card(Rank.Two, Suit.Spades),
-                Card(Rank.Three, Suit.Spades), Card(Rank.Four, Suit.Spades), Card(Rank.Five, Suit.Spades),
-                Card(Rank.Six, Suit.Spades), Card(Rank.Seven, Suit.Spades), Card(Rank.Eight, Suit.Spades),
-                Card(Rank.Nine, Suit.Spades), Card(Rank.Ten, Suit.Spades), Card(Rank.Jack, Suit.Spades),
-                Card(Rank.Queen, Suit.Spades), Card(Rank.King, Suit.Spades), Card(Rank.Ace, Suit.Spades),
-                Card(Rank.Two, Suit.Hearts), Card(Rank.Three, Suit.Hearts), Card(Rank.Four, Suit.Hearts),
-                Card(Rank.Five, Suit.Hearts), Card(Rank.Six, Suit.Hearts), Card(Rank.Seven, Suit.Hearts),
-                Card(Rank.Eight, Suit.Hearts), Card(Rank.Nine, Suit.Hearts), Card(Rank.Ten, Suit.Hearts),
-                Card(Rank.Jack, Suit.Hearts), Card(Rank.Queen, Suit.Hearts), Card(Rank.King, Suit.Hearts),
-                Card(Rank.Ace, Suit.Hearts)]
+
+        deck = []
+        for eachsuit in Suit:
+            for eachrank in Rank:
+                deck.append(Card(eachrank, eachsuit))
 
         if self.player_number == 3:
             deck.remove(Card(Rank.Two, Suit.Diamonds))
@@ -118,9 +151,10 @@ class Hearts:
             for player in self.players:
                 player.hand.append(self.deck[deck_count])
                 deck_count += 1
-        print(deck_count)
+
         for player in self.players:
-            print(f"{player} was dealt {player.hand}")
+            print(f"{player} was dealt \n{card_interface(player.hand)}")
+            # print(f"{player} was dealt {player.hand}")
 
     def pass_hand(self):
         pass_card_list = []
@@ -145,7 +179,8 @@ class Hearts:
             pass_card_reverse_index += 1
 
         for i in range(len(self.players)):
-            print(f"{self.players[i]} passed {pass_card_list[i]} to {self.players[index_list.index(i)]}")
+            print(f"{self.players[i]} passed to {self.players[index_list.index(i)]} \n{card_interface(pass_card_list[i])}")
+            # print(f"{self.players[i]} passed {pass_card_list[i]} to {self.players[index_list.index(i)]}")
             # passing player of index of target in index_list
 
     def start_round(self):

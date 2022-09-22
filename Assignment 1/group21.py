@@ -47,7 +47,7 @@ def int_input(prompt="", restricted_to=None):
     """
     Helper function that modifies the regular input method,
     and keeps asking for input until a valid one is entered. Input
-    can also be restricted to a set of integers.
+    can also be restricted to a set of integers.-
 
     Arguments:
       - prompt: String representing the message to display for input

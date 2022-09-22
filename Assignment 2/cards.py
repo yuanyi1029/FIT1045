@@ -44,7 +44,41 @@ class Card:
         return self.__str__()
 
     def __str__(self) -> str:
-        return self.rank.name + " of " + self.suit.name  # need .name to get the name only otherwise will get Class.Name
+        suit_art = {
+            1: "│  ♣  │",
+            2: "│  ♦  │",
+            3: "│  ♠  │",
+            4: "│  ♥  │"
+        }
+
+        rank_art = {
+            2: ["┌─────┐", "│2    │", "       ", "│    2│", "└─────┘"],
+            3: ["┌─────┐", "│3    │", "       ", "│    3│", "└─────┘"],
+            4: ["┌─────┐", "│4    │", "       ", "│    4│", "└─────┘"],
+            5: ["┌─────┐", "│5    │", "       ", "│    5│", "└─────┘"],
+            6: ["┌─────┐", "│6    │", "       ", "│    6│", "└─────┘"],
+            7: ["┌─────┐", "│7    │", "       ", "│    7│", "└─────┘"],
+            8: ["┌─────┐", "│8    │", "       ", "│    8│", "└─────┘"],
+            9: ["┌─────┐", "│9    │", "       ", "│    9│", "└─────┘"],
+            10: ["┌─────┐", "│10   │", "       ", "│   10│", "└─────┘"],
+            11: ["┌─────┐", "│J    │", "       ", "│    J│", "└─────┘"],
+            12: ["┌─────┐", "│Q    │", "       ", "│    Q│", "└─────┘"],
+            13: ["┌─────┐", "│K    │", "       ", "│    K│", "└─────┘"],
+            14: ["┌─────┐", "│A    │", "       ", "│    A│", "└─────┘"]
+        }
+
+        display_card = ""
+
+        for row in range(len(rank_art[2])):
+            display_card += "\n"
+            if row != 2:
+                display_card += rank_art[self.rank.value][row]
+
+            else:
+                display_card += suit_art[self.suit.value]
+
+        return display_card
+        # return f'{self.rank.name} of {self.suit.name}'
 
     def __eq__(self, other: Card) -> bool:
         return (self.suit, self.rank) == (other.suit, other.rank)

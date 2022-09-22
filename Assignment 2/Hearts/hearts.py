@@ -2,7 +2,7 @@ from __future__ import annotations
 import random
 from cards import Card, Rank, Suit
 from basic_ai import BasicAIPlayer
-from round import Round
+from test import Round
 
 
 class Hearts:
