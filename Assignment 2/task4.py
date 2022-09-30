@@ -1,7 +1,5 @@
 from __future__ import annotations
 from basic_ai import BasicAIPlayer
-from better_ai import BetterAIPlayer
-from human import Human
 from round import Round
 from cards import Card, Rank, Suit
 import random
@@ -14,7 +12,6 @@ class Hearts:
         Magic method that initializes the instance variables of the Hearts class with predefined values or user
         inputs (with validation tests) and executes the main method.
         """
-        print("Welcome to ♥ HEARTS ♥")
         self.round = 1
         self.target_score = int_input("Please enter a target score to end the game: ")
         self.player_number = int_input("Please enter the number of players (3-5): ")
@@ -66,19 +63,19 @@ class Hearts:
         Method that produces and returns a list of Player objects based on the user-inputted number of players in the
         game.
         """
-        players = [Human(), BetterAIPlayer("Player 2"), BasicAIPlayer("Player 3"),
-                BasicAIPlayer("Player 4"), BasicAIPlayer("Player 5")]
+        players = [BasicAIPlayer("Player 1"), BasicAIPlayer("Player 2"), BasicAIPlayer("Player 3"),
+                   BasicAIPlayer("Player 4"), BasicAIPlayer("Player 5")]
 
         for n in range(5 - self.player_number):
             players.pop()
 
         return players
 
-        # The game can only be played by a maximum of five players, therefore an initial list of players includes one
-        # Human, one BetterAIPlayer, and three BasicAIPlayers. The abundance of BasicAIPlayers is then removed from
-        # the list of players based on the user-inputted number of players.
+        # The game can only be played by a maximum of five players, therefore an initial list of players includes
+        # five BasicAIPlayers. The abundance of BasicAIPlayers is then removed from the list of players based on the
+        # user-inputted number of players.
 
-    def deck(self) -> list[Card]:
+    def deck(self):
         """
         Method that generates and returns a list of 52 distinct Card Objects based on a realistic deck, removing the
         Two of Diamonds if there are only three players and removing an extra Two of Spades if there are five players.
@@ -171,6 +168,9 @@ class Hearts:
         # Deal a card to each player in the game, then do it again and again until the total number of dealt cards
         # equals the total number of cards in the deck list.
 
+        for player in self.players:
+            print(f"{player} was dealt {player.hand}")
+
     def pass_hand(self):
         """
         Algorithm-based method that enables players to pass their hands to other players in accordance with the
@@ -190,8 +190,8 @@ class Hearts:
             else:
                 pass_order.append(index + (self.round % self.player_number))
 
-        # For example, if there are four players and it is round one or round five, player 1 will pass to player 2,
-        # player 2 will pass to player 3, player 3 will pass to player 4, and player 4 will pass to player 1. To
+        # For example, if there are four players and it is round one or round five, Player 1 will pass to Player 2,
+        # Player 2 will pass to Player 3, Player 3 will pass to Player 4, and Player 4 will pass to Player 1. To
         # arrange the pass hand order for each player, a list variable called pass_order is initialised, and for the
         # example above, the list will generate to be [1, 2, 3, 0], where the index of the list corresponds to the
         # passer's index in the players list, and the elements of the list correspond to the retriever's index in the
@@ -210,7 +210,11 @@ class Hearts:
         # in the players list in the pass_order list and use that value as the index to find their passed card in the
         # pass_card_list.
 
-        print("Cards have been passed")
+        for index in range(self.player_number):
+            print(f"{self.players[index]} passed {pass_card_list[index]} to {self.players[pass_order[index]]}")
+
+        # Display passing of cards of a player in terms of their passed card and to whom they passed to by using the
+        # for loop index in the players list, pass_card_list, and pass_order_list.
 
     def end_round(self):
         """
@@ -305,8 +309,8 @@ def int_input(prompt="", restricted_to=None):
     Input can also be restricted to a set of integers.
 
     Arguments:
-    - prompt: String representing the message to display for input
-    - restricted: List of integers for when the input must be restricted to a certain set of numbers
+      - prompt: String representing the message to display for input
+      - restricted: List of integers for when the input must be restricted to a certain set of numbers
 
     Returns the input in integer type.
     """
@@ -328,5 +332,4 @@ def int_input(prompt="", restricted_to=None):
     return int_player_input
 
 
-if __name__ == "__main__":
-    Hearts()
+Hearts()

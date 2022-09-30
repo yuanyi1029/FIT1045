@@ -17,10 +17,12 @@ class Rank(Enum):
     King = 13
     Ace = 14
 
+    # Each Enum element in Rank is assigned a distinct integer value according to the deck's ordering.
+
     def __lt__(self, other: Rank) -> bool:
         return self.value < other.value
-        # need .value to get the value otherwise will get Class.Name
-        # don't need .Suit as self is already Rank
+
+    # To compare the size of values of two Enum elements in Rank, the magic method __lt__ is used.
 
 
 class Suit(Enum):
@@ -29,9 +31,12 @@ class Suit(Enum):
     Spades = 3
     Hearts = 4
 
+    # Each Enum element in Suit is assigned a distinct integer value according to the deck's ordering.
+
     def __lt__(self, other: Suit) -> bool:
         return self.value < other.value
-        # don't need .Suit as self is already Rank
+
+    # To compare the size of values of two Enum elements in Suit, the magic method __lt__ is used.
 
 
 class Card:
@@ -44,57 +49,15 @@ class Card:
         return self.__str__()
 
     def __str__(self) -> str:
-        suit_art = {
-            1: "│  ♣  │",
-            2: "│  ♦  │",
-            3: "│  ♠  │",
-            4: "│  ♥  │"
-        }
+        return f'{self.rank.name} of {self.suit.name}'
 
-        rank_art = {
-            2: ["┌─────┐", "│2    │", "       ", "│    2│", "└─────┘"],
-            3: ["┌─────┐", "│3    │", "       ", "│    3│", "└─────┘"],
-            4: ["┌─────┐", "│4    │", "       ", "│    4│", "└─────┘"],
-            5: ["┌─────┐", "│5    │", "       ", "│    5│", "└─────┘"],
-            6: ["┌─────┐", "│6    │", "       ", "│    6│", "└─────┘"],
-            7: ["┌─────┐", "│7    │", "       ", "│    7│", "└─────┘"],
-            8: ["┌─────┐", "│8    │", "       ", "│    8│", "└─────┘"],
-            9: ["┌─────┐", "│9    │", "       ", "│    9│", "└─────┘"],
-            10: ["┌─────┐", "│10   │", "       ", "│   10│", "└─────┘"],
-            11: ["┌─────┐", "│J    │", "       ", "│    J│", "└─────┘"],
-            12: ["┌─────┐", "│Q    │", "       ", "│    Q│", "└─────┘"],
-            13: ["┌─────┐", "│K    │", "       ", "│    K│", "└─────┘"],
-            14: ["┌─────┐", "│A    │", "       ", "│    A│", "└─────┘"]
-        }
-
-        display_card = ""
-
-        for row in range(len(rank_art[2])):
-            display_card += "\n"
-            if row != 2:
-                display_card += rank_art[self.rank.value][row]
-
-            else:
-                display_card += suit_art[self.suit.value]
-
-        return display_card
-        # return f'{self.rank.name} of {self.suit.name}'
+    # When print() is used, the magic method __str__ is implemented to output "Name of Rank of Name of Suit".
 
     def __eq__(self, other: Card) -> bool:
         return (self.suit, self.rank) == (other.suit, other.rank)
 
     def __lt__(self, other: Card) -> bool:
         return (self.suit, self.rank) < (other.suit, other.rank)
-        # compare tuple can compare first then second
 
-    # don't need .suit.value or .rank.value as top class already
-    # defined what are them when comparing to inequality signs
-
-
-if __name__ == "__main__":
-    # you can make some local tests here.
-    card1 = Card(Rank.Two, Suit.Spades)
-    card2 = Card(Rank.Ace, Suit.Hearts)
-    print(f"{card1}, {card2}")
-    print(card1 > card2)
-    pass
+    # The sizes of two Cards may be found to be comparable by comparing the values in terms of Suit first,
+    # followed by Rank, in the magic function __eq__. This is done by placing the suit and rank of a Card in a tuple.
