@@ -1,6 +1,6 @@
 from __future__ import annotations
 from basic_ai import BasicAIPlayer
-from round import Round
+from task3 import Round
 from cards import Card, Rank, Suit
 import random
 
