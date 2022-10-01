@@ -5,72 +5,88 @@ from cards import Card, Rank, Suit
 class Player:
 
     def __init__(self, name: str) -> None:
+        """
+        Magic method that initializes the instance variables of the Player class.
+
+        Arguments:
+            -name: String of player's name
+        """
         self.name = name
         self.hand = []
-        self.round_score = 0 
+        self.round_score = 0
         self.total_score = 0
 
-    def __str__(self) -> None:
+    def __str__(self) -> str:
         return self.name
 
-    def __repr__(self) -> None:
+    def __repr__(self) -> str:
         return self.__str__()
 
     def check_valid_play(self, card: Card, trick: list[Card], broken_hearts: bool) -> tuple(bool, str):
+        """
+        Method that checks a Card object to see if it is a valid play during a trick and returns a tuple of a boolean
+        value which represents the validity of the play and a string which acts as an error message if the card is
+        not valid to play.
 
-        has_required_suit = False
-        leading = False 
+        Arguments:
+            -card: Card object being played
+            -trick: List of Card objects in the current trick
+            -broken_hearts: Boolean value to represent if hearts have been broken
 
-        # checks if player is leading the trick
+        Returns a boolean of the validity of play and a string of the error message in tuple type.
+        """
         if len(trick) == 0:
-            leading = True
-            
-        if leading is True: 		
-            # for leading, check hand for cards other than hearts 								
-            for i in self.hand:
-                if i.suit == Suit.Clubs or i.suit == Suit.Diamonds or i.suit == Suit.Spades:
-                    has_required_suit = True
+            if Card(Rank.Two, Suit.Clubs) in self.hand and card != Card(Rank.Two, Suit.Clubs):
+                return False, 'Player MUST lead the opening trick of the round with the Two of Clubs!'
 
-            # if have other cards than hearts:
-            if has_required_suit is True:
-                # disallow any other cards except Two of Clubs for first trick
-                if Card(Rank.Two, Suit.Clubs) in self.hand and card != Card(Rank.Two, Suit.Clubs):
-                    output_tuple = (False, "Player must play Two of Clubs")
-                # disallow playing hearts if hearts not broken yet
-                elif card.suit.name == "Hearts" and broken_hearts == False:
-                    output_tuple = (False, "Player cannot lead with hearts when Hearts are not broken")
-                else: 
-                    output_tuple = (True, "valid play")
-            
-            # if only have heart cards in hand:
-            elif has_required_suit is False:
-                output_tuple = (True, "valid play")
+            elif card.suit == Suit.Hearts and broken_hearts is False:
+                return False, 'Player cannot lead with Hearts before hearts have been broken!'
 
-        else:	
-            # for not leading, check hand to see if able to follow suit or not
-            for i in self.hand:
-                if trick[0].suit == i.suit:
-                    has_required_suit = True
+            else:
+                return True, 'Valid play'
 
-            # if hand has required card to follow suit:
-            if has_required_suit is True:
-                # disallow not following suit 
+        # Validation rules for leading the trick:
+
+        # Player has Two of Clubs in hand but does not play it      -> Invalid play
+        # Player plays Hearts card but hearts have not been broken  -> Invalid play
+        # Every other play                                          -> Valid play
+
+        else:
+            able_to_follow_suit = False
+
+            for cards in self.hand:
+                if cards.suit == trick[0].suit:
+                    able_to_follow_suit = True
+
+            # To determine whether the player has the appropriate cards to be able to follow the suit of the current
+            # trick, loop through every card in their hand. The variable able_to_follow_suit will be updated to be
+            # True if the suit of a card in the player's hand matches the suit of the current trick.
+
+            if able_to_follow_suit is True:
                 if card.suit != trick[0].suit:
-                    output_tuple = (False, "Player must Follow Suit")
-                else: 
-                    output_tuple = (True, "valid play")
+                    return False, 'Player still has cards from the suit of the current trick!'
 
-            # if dont have required card to follow suit:
-            elif has_required_suit is False:
-                # disallow queen of spades on the first trick
-                if card == Card(Rank.Queen, Suit.Spades) and trick[0] == Card(Rank.Two, Suit.Clubs):
-                    output_tuple = (False, "Player cannot play Queen of Spades during the first round")
                 else:
-                    output_tuple = (True, "valid play")		
+                    return True, 'Valid play'
 
-        return output_tuple
+            else:
+                if trick[0] == Card(Rank.Two, Suit.Clubs):
+                    if card.suit == Suit.Hearts or card == Card(Rank.Queen, Suit.Spades):
+                        return False, 'Player is not allowed to play Hearts or the Queen of Spades if it is the ' \
+                                      'opening trick of the round!'
 
+                    else:
+                        return True, 'Valid play'
 
+                else:
+                    return True, 'Valid play'
 
+        # Validation rules for following the trick:
 
+        # If player is able to follow the suit of the current trick:
+        #     - Player plays a card that does not match the suit of the current trick               -> Invalid play
+        #     - Every other play                                                                    -> Valid play
 
+        # If player is not able to follow the suit of the current trick:
+        #     - Player plays Hearts or the Queen of Spades during the opening trick of the round    -> Invalid play
+        #     - Every other play                                                                    -> Valid play

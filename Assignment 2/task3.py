@@ -1,6 +1,5 @@
 from __future__ import annotations
 from cards import Card, Rank, Suit
-import time
 
 
 class Round:
@@ -10,7 +9,7 @@ class Round:
         Magic method that initializes the instance variables of the Round class and executes the main method.
 
         Arguments:
-            -players: List of Player objects that are in the game
+            -players: list of Player objects that are in the game
         """
         self.players = players
         self.broken_hearts = False
@@ -42,14 +41,8 @@ class Round:
         turn_count = 0
 
         for player in self.turn_order(leader):
-            time.sleep(1)
             played_card = player.play_card(trick, self.broken_hearts)
-
-            if turn_count == 0:
-                print(f"{player} leads with {card_interface(played_card)}")
-
-            else:
-                print(f"{player} plays {card_interface(played_card)}")
+            print(f"{player} plays {played_card}")
 
             if self.broken_hearts is False:
 
@@ -59,7 +52,6 @@ class Round:
 
             trick.append(played_card)
             turn_count += 1
-            time.sleep(1)
 
         return trick
 
@@ -141,57 +133,3 @@ class Round:
         # the taker's round score.
 
         return taker
-
-
-def card_interface(card: Card) -> str:
-    """
-    Helper function that accepts a Card object that was played by a player and returns the card as a string art
-    displaying the played card interface
-
-    Arguments:
-        - card: Card Objects that was played
-
-    Returns the card that was played by a player as a string art displaying the played card interface in string type.
-    """
-    suit_art = {
-        1: "│  ♣  │",
-        2: "│  ♦  │",
-        3: "│  ♠  │",
-        4: "│  ♥  │"
-    }
-
-    rank_art = {
-        2: ["┌─────┐", "│2    │", "       ", "│    2│", "└─────┘"],
-        3: ["┌─────┐", "│3    │", "       ", "│    3│", "└─────┘"],
-        4: ["┌─────┐", "│4    │", "       ", "│    4│", "└─────┘"],
-        5: ["┌─────┐", "│5    │", "       ", "│    5│", "└─────┘"],
-        6: ["┌─────┐", "│6    │", "       ", "│    6│", "└─────┘"],
-        7: ["┌─────┐", "│7    │", "       ", "│    7│", "└─────┘"],
-        8: ["┌─────┐", "│8    │", "       ", "│    8│", "└─────┘"],
-        9: ["┌─────┐", "│9    │", "       ", "│    9│", "└─────┘"],
-        10: ["┌─────┐", "│10   │", "       ", "│   10│", "└─────┘"],
-        11: ["┌─────┐", "│J    │", "       ", "│    J│", "└─────┘"],
-        12: ["┌─────┐", "│Q    │", "       ", "│    Q│", "└─────┘"],
-        13: ["┌─────┐", "│K    │", "       ", "│    K│", "└─────┘"],
-        14: ["┌─────┐", "│A    │", "       ", "│    A│", "└─────┘"]
-    }
-
-    display_card = ""
-
-    for row in range(len(rank_art[2])):
-        display_card += "\n"
-        if row != 2:
-            display_card += rank_art[card.rank.value][row]
-
-        else:
-            display_card += suit_art[card.suit.value]
-
-    # Repeat this process until there are a total of five rows (following the length of one of the keys in rank art,
-    # in this instance key: 2), which is necessary to print a card's art from top to bottom. Then, using matching
-    # rank art and suit art to the card, display_card is concatenated from left to right to display each row.
-
-    return display_card
-
-
-
-
