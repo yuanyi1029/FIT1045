@@ -74,7 +74,7 @@ class Round:
 	def winner_check(self, trick: list[Card], players):
 		points = 0 
 		winner_index = 0
-		winner = None
+		winner = None	
 		main_suit = trick[0].suit
 		highest_card = trick[0]
 
