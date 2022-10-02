@@ -168,6 +168,11 @@ class Hearts:
                 player.hand.append(self.deck[deck_count])
                 deck_count += 1
 
+        # while len(shuffled_deck) != 0 :
+        #     for player in players:
+        #         player.hand.append(shuffled_deck[0])
+        #         shuffled_deck.remove(shuffled_deck[0])
+
         # Deal a card to each player in the game, then do it again and again until the total number of dealt cards
         # equals the total number of cards in the deck list.
 
