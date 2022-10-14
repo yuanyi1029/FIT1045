@@ -50,7 +50,7 @@ class Card:
 
     def __str__(self) -> str:
         return f'{self.rank.name} of {self.suit.name}'
-
+ 
     # When print() is used, the magic method __str__ is implemented to output "Name of Rank of Name of Suit".
 
     def __eq__(self, other: Card) -> bool:

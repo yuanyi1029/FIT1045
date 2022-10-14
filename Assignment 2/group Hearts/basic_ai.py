@@ -17,9 +17,12 @@ class BasicAIPlayer(Player):
         """
         self.hand.sort()
 
+        count = 0 
         for card in self.hand:
             if self.check_valid_play(card, trick, broken_hearts)[0] is True:
-                self.hand.remove(card)
+                count += 1
+                if count == 2 : 
+                    self.hand.remove(card)
                 return card
 
         # Sort the cards in the BasicAIPlayer's hand in ascending order, then loop over the entire hand,
@@ -44,7 +47,7 @@ class BasicAIPlayer(Player):
 
         pass_card_list = []
         for i in range(3):
-            pass_card_list.append(self.hand[len(self.hand) - 1])
+            pass_card_list.append(self.hand[i])
             self.hand.pop()
 
         # The BasicAIPlayer's hand is sorted into ascending order, and the highest card is added to the
