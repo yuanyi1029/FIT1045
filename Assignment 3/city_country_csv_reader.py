@@ -4,7 +4,7 @@ def create_cities_countries_from_CSV(path_to_csv: str) -> None:
     """
     Reads a CSV file given its path and creates instances of City and Country for each line.
     """
-        raise NotImplementedError
+    raise NotImplementedError
 
 
 if __name__ == "__main__":

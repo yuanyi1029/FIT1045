@@ -1,5 +1,6 @@
 from __future__ import annotations 
 from enum import Enum
+from geopy.distance import great_circle as GRC
 
 
 class CapitalType(Enum):
@@ -30,6 +31,8 @@ class Country():
         self.iso3 = iso3
         self.cities = []
 
+        Country.countries[self.name] = self
+
     def _add_city(self, city: City):
         """
         Adds a city to the country.
@@ -45,14 +48,12 @@ class Country():
         Cities that do not correspond to these capital types are not returned.
         If no argument is given, all cities are returned.
         """
-        # returncity = []
-        # for eachcity in self.cities:
-        #     if eachcity.capitaltype in capital_types:
-        #         returncity.append(eachcity)
 
-        # cities = filter(lambda eachcity: eachcity.CapitalType in capital_types.CapitalType , self.cities)
-        # return list(cities)
-        raise NotImplementedError
+        if capital_types is None:
+            return self.cities
+        else:
+            cities = [eachcity for eachcity in self.cities if eachcity.capital_type in capital_types]
+            return list(cities)
 
 
     def get_city(self, city_name: str) -> City:
@@ -61,19 +62,22 @@ class Country():
         Returns None if there is no city by this name.
         If there are multiple cities of the same name, returns an arbitrary one.
         """
-        # for eachcity in self.cities:
-        #     if eachcity == city_name:
-        #         city = eachcity
 
-        # city = lambda city_name: 
-        # return city
-        raise NotImplementedError
+        city = [eachcity for eachcity in self.cities if eachcity.name == city_name]
+        if len(list(city)) == 0 :
+            return None 
+        else:
+            return list(city)[0]
 
     def __str__(self) -> str:
         """
         Returns the name of the country.
         """
-        return self.name
+        return f"{self.name}"
+
+    # self added 
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 class City():
@@ -91,23 +95,31 @@ class City():
         self.latitude = latitude
         self.longitude = longitude
         self.country = country
-        self.capital_type = capital_type
+        self.capital_type = CapitalType(capital_type)
         self.city_id = city_id
+
+        City.cities[self.city_id] = self
+        Country.countries[self.country]._add_city(self)
 
     def distance(self, other_city: City) -> int:
         """
         Returns the distance in kilometers between two cities using the great circle method,
         rounded up to an integer.
         """
-        raise NotImplementedError
+        distance = round(GRC((self.latitude,self.longitude), (other_city.latitude, other_city.longitude)).kilometers)
+        return distance
 
     def __str__(self) -> str:
         """
         Returns the name of the city and the country ISO3 code in parentheses.
         For example, "Melbourne (AUS)".
         """
-        ### WHERE TO FIND ISO3????
-        # return f"{self.name} ({self.iso3})"
+        
+        return f"{self.name} ({Country.countries[self.country].iso3})"
+    
+    # self added 
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 def create_example_countries_and_cities() -> None:
@@ -140,4 +152,24 @@ def test_example_countries_and_cities() -> None:
 
 if __name__ == "__main__":
     create_example_countries_and_cities()
-    # test_example_countries_and_cities()
+    test_example_countries_and_cities()
+    # australia = Country("Australia", "AUS")
+    # melbourne = City("Melbourne", "-37.8136", "144.9631", "Australia", "admin", "1036533631")
+    # canberra = City("Canberra", "-35.2931", "149.1269", "Australia", "primary", "1036142029")
+    # sydney = City("Sydney", "-33.865", "151.2094", "Australia", "admin", "1036074917")
+
+    # japan = Country ("Japan", "JPN")
+    # tokyo = City("Tokyo", "35.6839", "139.7744", "Japan", "primary", "1392685764")
+    # australia._add_city(melbourne)
+    # australia._add_city(canberra)
+    # australia._add_city(sydney)
+
+    # print(Country.countries)
+    # print(City.cities)
+
+    # print(australia)
+    # print(melbourne)
+    # print(australia.get_cities([CapitalType.admin, CapitalType.primary]))
+    # print(australia.get_city("Melbourne"))
+
+    # print(melbourne.distance(sydney))
