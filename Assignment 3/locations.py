@@ -1,6 +1,7 @@
 from __future__ import annotations 
 from enum import Enum
 from geopy.distance import great_circle as GRC
+import math
 
 
 class CapitalType(Enum):
@@ -106,7 +107,7 @@ class City():
         Returns the distance in kilometers between two cities using the great circle method,
         rounded up to an integer.
         """
-        distance = round(GRC((self.latitude,self.longitude), (other_city.latitude, other_city.longitude)).kilometers)
+        distance = math.ceil(GRC((self.latitude,self.longitude), (other_city.latitude, other_city.longitude)).kilometers)
         return distance
 
     def __str__(self) -> str:

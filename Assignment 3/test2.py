@@ -29,6 +29,9 @@ def create_cities_countries_from_CSV(path_to_csv: str) -> None:
                  linelist[data_extraction_index_list[2]], linelist[data_extraction_index_list[3]],
                  linelist[data_extraction_index_list[5]], linelist[data_extraction_index_list[6]])
 
+        print(Country.countries)
+        print(City.cities)
+
 if __name__ == "__main__":
     create_cities_countries_from_CSV("worldcities_truncated.csv")
     test_example_countries_and_cities()

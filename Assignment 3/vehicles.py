@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from locations import CapitalType, City, Country
 from locations import create_example_countries_and_cities
+import math
 
 class Vehicle(ABC):
     """
@@ -35,21 +36,23 @@ class CrappyCrepeCar(Vehicle):
         """
         Creates a CrappyCrepeCar with a given speed in km/h.
         """
-        raise NotImplementedError
+        self.speed = speed 
 
     def compute_travel_time(self, departure: City, arrival: City) -> float:
         """
         Returns the travel duration of a direct trip from one city
         to another, in hours, rounded up to an integer.
         """
-        raise NotImplementedError
+        time = math.ceil((departure.distance(arrival)) / self.speed)
+        return time
 
     def __str__(self) -> str:
         """
         Returns the class name and the parameters of the vehicle in parentheses.
         For example "CrappyCrepeCar (100 km/h)"
         """
-        raise NotImplementedError
+        return f"{__class__.__name__} ({self.speed} km/h)"
+
 
 
 class DiplomacyDonutDinghy(Vehicle):
@@ -66,7 +69,8 @@ class DiplomacyDonutDinghy(Vehicle):
             - one speed for two cities in the same country.
             - one speed between two primary cities.
         """
-        raise NotImplementedError
+        self.in_country_speed = in_country_speed
+        self.between_primary_speed = between_primary_speed
 
     def compute_travel_time(self, departure: City, arrival: City) -> float:
         """
@@ -74,14 +78,20 @@ class DiplomacyDonutDinghy(Vehicle):
         to another, in hours, rounded up to an integer.
         Returns math.inf if the travel is not possible.
         """
-        raise NotImplementedError
+        if departure.country == arrival.country:
+            time = math.ceil((departure.distance(arrival)) / self.in_country_speed)
+        elif departure.country != arrival.country and departure.capital_type == CapitalType.primary and departure.capital_type == CapitalType.primary:
+            time = math.ceil((departure.distance(arrival)) / self.between_primary_speed)
+        else:
+            time = math.inf
+        return time 
 
     def __str__(self) -> str:
         """
         Returns the class name and the parameters of the vehicle in parentheses.
         For example "DiplomacyDonutDinghy (100 km/h | 200 km/h)"
         """
-        raise NotImplementedError
+        return f"{__class__.__name__} ({self.in_country_speed} km/h | {self.between_primary_speed} km/h)"
 
 
 class TeleportingTarteTrolley(Vehicle):
@@ -95,7 +105,9 @@ class TeleportingTarteTrolley(Vehicle):
         """
         Creates a TarteTruck with a distance limit in km.
         """
-        raise NotImplementedError
+        self.travel_time = travel_time
+        self.max_distance = max_distance
+
 
     def compute_travel_time(self, departure: City, arrival: City) -> float:
         """
@@ -103,14 +115,18 @@ class TeleportingTarteTrolley(Vehicle):
         to another, in hours, rounded up to an integer.
         Returns math.inf if the travel is not possible.
         """
-        raise NotImplementedError
+        if departure.distance(arrival) <= self.max_distance:
+            time = math.ceil(self.travel_time)
+        else:
+            time = math.inf
+        return time
 
     def __str__(self) -> str:
         """
         Returns the class name and the parameters of the vehicle in parentheses.
         For example "TeleportingTarteTrolley (5 h | 1000 km)"
         """
-        raise NotImplementedError
+        return f"{__class__.__name__} ({self.travel_time} h | {self.max_distance} km)"
 
 
 def create_example_vehicles() -> list[Vehicle]:
@@ -134,3 +150,7 @@ if __name__ == "__main__":
     for vehicle in vehicles:
         for from_city, to_city in [(melbourne, canberra), (tokyo, canberra), (tokyo, melbourne)]:
             print("Travelling from {} to {} will take {} hours with {}".format(from_city, to_city, vehicle.compute_travel_time(from_city, to_city), vehicle))
+
+    # vehicle1 = vehicles[0]
+    # print(vehicle1.compute_travel_time(melbourne, melbourne))
+   
