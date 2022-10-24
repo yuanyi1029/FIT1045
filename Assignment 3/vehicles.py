@@ -9,6 +9,8 @@ class Vehicle(ABC):
     A Vehicle defined by a mode of transportation, which results in a specific duration.
     """
 
+    # vehicle_list = []
+
     @abstractmethod
     def compute_travel_time(self, departure: City, arrival: City) -> float:
         """
@@ -37,6 +39,7 @@ class CrappyCrepeCar(Vehicle):
         Creates a CrappyCrepeCar with a given speed in km/h.
         """
         self.speed = speed 
+        # Vehicle.vehicle_list.append(self)
 
     def compute_travel_time(self, departure: City, arrival: City) -> float:
         """
@@ -52,6 +55,9 @@ class CrappyCrepeCar(Vehicle):
         For example "CrappyCrepeCar (100 km/h)"
         """
         return f"{__class__.__name__} ({self.speed} km/h)"
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 
@@ -71,6 +77,7 @@ class DiplomacyDonutDinghy(Vehicle):
         """
         self.in_country_speed = in_country_speed
         self.between_primary_speed = between_primary_speed
+        # Vehicle.vehicle_list.append(self)
 
     def compute_travel_time(self, departure: City, arrival: City) -> float:
         """
@@ -80,10 +87,11 @@ class DiplomacyDonutDinghy(Vehicle):
         """
         if departure.country == arrival.country:
             time = math.ceil((departure.distance(arrival)) / self.in_country_speed)
-        elif departure.country != arrival.country and departure.capital_type == CapitalType.primary and departure.capital_type == CapitalType.primary:
+        elif departure.capital_type == CapitalType.primary and arrival.capital_type == CapitalType.primary:
             time = math.ceil((departure.distance(arrival)) / self.between_primary_speed)
         else:
             time = math.inf
+            
         return time 
 
     def __str__(self) -> str:
@@ -92,6 +100,9 @@ class DiplomacyDonutDinghy(Vehicle):
         For example "DiplomacyDonutDinghy (100 km/h | 200 km/h)"
         """
         return f"{__class__.__name__} ({self.in_country_speed} km/h | {self.between_primary_speed} km/h)"
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 class TeleportingTarteTrolley(Vehicle):
@@ -107,6 +118,7 @@ class TeleportingTarteTrolley(Vehicle):
         """
         self.travel_time = travel_time
         self.max_distance = max_distance
+        # Vehicle.vehicle_list.append(self)
 
 
     def compute_travel_time(self, departure: City, arrival: City) -> float:
@@ -115,7 +127,7 @@ class TeleportingTarteTrolley(Vehicle):
         to another, in hours, rounded up to an integer.
         Returns math.inf if the travel is not possible.
         """
-        if departure.distance(arrival) <= self.max_distance:
+        if departure.distance(arrival) < self.max_distance:
             time = math.ceil(self.travel_time)
         else:
             time = math.inf
@@ -128,6 +140,8 @@ class TeleportingTarteTrolley(Vehicle):
         """
         return f"{__class__.__name__} ({self.travel_time} h | {self.max_distance} km)"
 
+    def __repr__(self) -> str:
+        return self.__str__()
 
 def create_example_vehicles() -> list[Vehicle]:
     """
@@ -151,6 +165,7 @@ if __name__ == "__main__":
         for from_city, to_city in [(melbourne, canberra), (tokyo, canberra), (tokyo, melbourne)]:
             print("Travelling from {} to {} will take {} hours with {}".format(from_city, to_city, vehicle.compute_travel_time(from_city, to_city), vehicle))
 
+    print(Vehicle.vehicle_list)
     # vehicle1 = vehicles[0]
     # print(vehicle1.compute_travel_time(melbourne, melbourne))
    
