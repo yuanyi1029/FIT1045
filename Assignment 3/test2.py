@@ -1,43 +1,54 @@
 import city_country_csv_reader
-from locations import create_example_countries_and_cities
-from trip import Trip, create_example_trips
+from locations import City, Country
+from trip import Trip
+from vehicles import Vehicle, create_example_vehicles
 
-from mpl_toolkits.basemap import Basemap
-from matplotlib import pyplot
+import math
+import networkx as nx 
 
-def plot_trip(trip: Trip, projection = 'robin', line_width=2, colour='b') -> None:
+
+def find_shortest_path(vehicle: Vehicle, from_city: City, to_city: City) -> Trip:
     """
-    Plots a trip on a map and writes it to a file.
-    Ensures a size of at least 50 degrees in each direction.
-    Ensures the cities are not on the edge of the map by padding by 5 degrees.
-    The name of the file is map_city1_city2_city3_..._cityX.png.
+    Returns a shortest path between two cities for a given vehicle,
+    or None if there is no path.
     """
-    map = Basemap(projection="robin", lon_0=0)
-    # map = Basemap(projection=projection, lon_0 = 100, lat_0 = 100)
+    if vehicle.__class__.__name__ == "CrappyCrepeCar":
+        shortest_path = Trip(from_city)
+        shortest_path.add_next_city(to_city)
 
-    map.drawcoastlines()
-    map.fillcontinents()
+        return shortest_path
+    
+    else:
+        graph = nx.Graph()
+        # create all nodes 
+        for eachcity in City.cities.values():
+            graph.add_node(eachcity)
 
-    # lat,lng = -37.8136,144.9631
-    # xlat, xlng = map(lat, lng)
-    # map.plot(xlat,xlng, "c*")
-    # map.plot(lat, lng, marker='D',color='b')
+        # create all edges 
+        for eachcity in City.cities.values():
+            for eachcity2 in City.cities.values():
+                if vehicle.compute_travel_time(eachcity, eachcity2) != math.inf:
+                    graph.add_edge(eachcity, eachcity2, weight=vehicle.compute_travel_time(eachcity,eachcity2))
 
+        shortest_path_list = nx.shortest_path(graph, from_city, to_city)
 
-    # pyplot.annotate('test', xy=(-37.8136,144.9631), xycoords="data")
-    pyplot.show()
-    pyplot.savefig('wow.png')
+        shortest_path = Trip(from_city)
+
+        for city in shortest_path_list[1:]:
+            shortest_path.add_next_city(city)
+
+        return shortest_path
+
 
 if __name__ == "__main__":
     city_country_csv_reader.create_cities_countries_from_CSV("worldcities_truncated.csv")
 
-    create_example_countries_and_cities()
+    vehicles = create_example_vehicles()
 
-    trips = create_example_trips()
-    trip1 = trips[0]
+    australia = Country.countries["Australia"]
+    melbourne = australia.get_city("Melbourne")
+    japan = Country.countries["Japan"]
+    tokyo = japan.get_city("Tokyo")
 
-    print(trip1)
-    plot_trip(trip1)
-
-    # for trip in trips:
-    #     plot_trip(trip)
+    for vehicle in vehicles:
+        print("The shortest path for {} from {} to {} is {}".format(vehicle, melbourne, tokyo, find_shortest_path(vehicle, melbourne, tokyo)))

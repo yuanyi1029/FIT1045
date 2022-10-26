@@ -2,9 +2,8 @@ import city_country_csv_reader
 from locations import City, Country
 from trip import Trip
 from vehicles import Vehicle, create_example_vehicles
-
+import networkx
 import math
-import networkx as nx 
 
 
 def find_shortest_path(vehicle: Vehicle, from_city: City, to_city: City) -> Trip:
@@ -17,27 +16,32 @@ def find_shortest_path(vehicle: Vehicle, from_city: City, to_city: City) -> Trip
         shortest_path.add_next_city(to_city)
 
         return shortest_path
-    
+
     else:
-        graph = nx.Graph()
-        # create all nodes 
-        for eachcity in City.cities.values():
-            graph.add_node(eachcity)
+        path = networkx.Graph()
 
-        # create all edges 
-        for eachcity in City.cities.values():
-            for eachcity2 in City.cities.values():
-                if vehicle.compute_travel_time(eachcity, eachcity2) != math.inf:
-                    graph.add_edge(eachcity, eachcity2, weight=vehicle.compute_travel_time(eachcity,eachcity2))
+        if vehicle.__class__.__name__ == "DiplomacyDonutDinghy":
+            for city in City.cities.values():
+                if city.country == from_city.country or city.country == to_city.country:
+                    path.add_node(city)
 
-        shortest_path_list = nx.shortest_path(graph, from_city, to_city)
+        else:
+            for city in City.cities.values():
+                path.add_node(city)
 
-        shortest_path = Trip(from_city)
+        for city in path.nodes():
+            for other_city in path.nodes():
+                path.add_edge(city, other_city, weight=vehicle.compute_travel_time(city, other_city))
 
-        for city in shortest_path_list[1:]:
-            shortest_path.add_next_city(city)
+        shortest_path_list = networkx.dijkstra_path(path, from_city, to_city)
 
-        return shortest_path
+        if vehicle.compute_travel_time(from_city, shortest_path_list[1]) != math.inf:
+            shortest_path = Trip(from_city)
+
+            for city in shortest_path_list[1:]:
+                shortest_path.add_next_city(city)
+
+            return shortest_path
 
 
 if __name__ == "__main__":
