@@ -32,7 +32,7 @@ class Trip():
             if vehicle.compute_travel_time(self.cities[cityindex], self.cities[cityindex+1]) == math.inf:
                 time = math.inf
             else:
-                time = vehicle.compute_travel_time(self.cities[cityindex], self.cities[cityindex+1]) 
+                time += vehicle.compute_travel_time(self.cities[cityindex], self.cities[cityindex+1]) 
         return time
 
     def find_fastest_vehicle(self, vehicles: list[Vehicle]) -> tuple[Vehicle, float]:

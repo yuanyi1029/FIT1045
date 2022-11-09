@@ -28,7 +28,7 @@ class Application:
         # self.plot_trip()
         # print(self.find_fastest_vehicle_for_trip())
         # print(self.trips)
-        self.simulate_trip()
+        # self.simulate_trip()
 
 
     def display_main_menu(self):
