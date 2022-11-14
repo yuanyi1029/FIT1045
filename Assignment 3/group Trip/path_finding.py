@@ -54,6 +54,7 @@ def find_shortest_path(vehicle: Vehicle, from_city: City, to_city: City) -> Trip
 
         shortest_path_list = networkx.dijkstra_path(path, from_city, to_city)
 
+
         if vehicle.compute_travel_time(from_city, shortest_path_list[1]) != math.inf:
             shortest_path = Trip(from_city)
 

@@ -178,3 +178,4 @@ def test_example_countries_and_cities() -> None:
 if __name__ == "__main__":
     create_example_countries_and_cities()
     test_example_countries_and_cities()
+
