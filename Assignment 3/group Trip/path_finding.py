@@ -60,7 +60,7 @@ def find_shortest_path(vehicle: Vehicle, from_city: City, to_city: City) -> Trip
 
             for city in shortest_path_list[1:]:
                 shortest_path.add_next_city(city)
-
+    
             return shortest_path
 
         # A list representing the shortest path is produced using the Dijkstra's algorithm. The return value will be
